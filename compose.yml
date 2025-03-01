@@ -1,0 +1,34 @@
+services:
+  dbTodoListca:
+    restart: always
+    image: postgres:15.2
+    environment:
+      POSTGRES_USER: todolistcaSuperUser
+      POSTGRES_PASSWORD: todolistcaSuperPassword
+      POSTGRES_DB: todolistcaDB
+    ports:
+      - 5433:5432
+    volumes:
+      - pgdatatodolistca:/var/lib/postgresql/data
+      - ./migrations/todolistca/createtable.sql:/docker-entrypoint-initdb.d/createtable.sql
+      - ./migrations/todolistca/inserttable.sql:/docker-entrypoint-initdb.d/inserttable.sql
+    networks:
+      - drpetproject-network
+
+#  apiTodolist:
+#    image: todolistdrpetprojectapi:v.1.0
+#    container_name: todolist
+#    ports:
+#      - 8080:8080
+#    networks:
+#      drpetproject-network:
+#    depends_on:
+#      - dbTodolist
+
+volumes:
+  pgdatatodolistca:
+    name: pgdatatodolistca
+
+networks:
+  drpetproject-network:
+    driver: bridge
