@@ -9,6 +9,7 @@ import (
 // NoteRepository - интерфейс для работы с заметками
 type NoteRepository interface {
 	GetAllNotes() ([]models.AllNotes, error)
+	CreateNote(note *models.AllNotes) error
 }
 
 type noteRepository struct {
@@ -23,6 +24,7 @@ func NewNoteRepository(db *gorm.DB, logger *logging.Logger) NoteRepository {
 	}
 }
 
+// GetAllNotes Получить все посты
 func (r *noteRepository) GetAllNotes() ([]models.AllNotes, error) {
 	var note []models.AllNotes
 	if err := r.db.Find(&note).Error; err != nil {
@@ -31,4 +33,9 @@ func (r *noteRepository) GetAllNotes() ([]models.AllNotes, error) {
 	}
 
 	return note, nil
+}
+
+// CreateNote сохраняет новую заметку в БД
+func (r *noteRepository) CreateNote(note *models.AllNotes) error {
+	return r.db.Create(&note).Error
 }

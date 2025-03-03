@@ -28,5 +28,6 @@ func NewHandler(cfg *config.Config, logger *logging.Logger, db *gorm.DB) *Handle
 func (h *Handler) RegisterRoutes(router *httprouter.Router) {
 	noteHandler := NewNoteHandler(h.noteRepo, h.logger)
 
-	router.GET("/", noteHandler.GetAllNotes)
+	router.GET("/", noteHandler.GetAllNotes)     // Получения всех записей
+	router.POST("/addpost", noteHandler.AddPost) // Добавить пост
 }

@@ -2,3 +2,13 @@
 [36mINFO[0m[2025-03-02T21:09:30+03:00]main.go:45 main.start() Сервер запущен на :8080                      
 [36mINFO[0m[2025-03-02T21:09:59+03:00]main.go:44 main.start() Сервер запущен на :8080                      
 [36mINFO[0m[2025-03-02T21:47:50+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-02T21:49:41+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-03T21:03:49+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-03T21:22:26+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-03T21:31:41+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-03T21:34:36+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-03T21:34:51+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[31mERRO[0m[2025-03-03T21:34:53+03:00]note_repository.go:41 github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/repository.(*noteRepository).CreateNote() ERROR: column "user_id" of relation "all_notes" does not exist (SQLSTATE 42703) 
+[31mERRO[0m[2025-03-03T21:34:53+03:00]note_handler.go:68 github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/handlers.(*NoteHandler).AddPost() Ошибка при добавления записи в БД: ERROR: column "user_id" of relation "all_notes" does not exist (SQLSTATE 42703) 
+[36mINFO[0m[2025-03-03T21:35:43+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-03T21:36:41+03:00]main.go:49 main.start() Сервер запущен на :8080                      
