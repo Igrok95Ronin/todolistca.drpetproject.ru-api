@@ -14,3 +14,8 @@ type AllNotes struct {
 func (AllNotes) TableName() string {
 	return "all_notes"
 }
+
+// Обновить заметку
+type ModifiedEntry struct {
+	ModEntry string `json:"modEntry"`
+}

@@ -9,6 +9,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"html"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -26,6 +27,7 @@ func NewNoteHandler(repo repository.NoteRepository, logger *logging.Logger) *Not
 	}
 }
 
+// GetAllNotes Получить все посты
 func (h *NoteHandler) GetAllNotes(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	notes, err := h.repo.GetAllNotes()
 	if err != nil {
@@ -72,4 +74,32 @@ func (h *NoteHandler) AddPost(w http.ResponseWriter, r *http.Request, _ httprout
 	}
 
 	w.WriteHeader(http.StatusCreated)
+}
+
+// EditEntry обновить заметку
+func (h *NoteHandler) EditEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	var modifiedEntry *models.ModifiedEntry
+
+	if err := json.NewDecoder(r.Body).Decode(&modifiedEntry); err != nil {
+		// Если произошла ошибка декодирования, возвращаем клиенту ошибку с кодом 400
+		httperror.WriteJSONError(w, "Ошибка декодирования в JSON", err, http.StatusBadRequest)
+		// Логируем ошибку
+		h.logger.Errorf("Ошибка декодирования в JSON: %s", err)
+		return
+	}
+
+	id, _ := strconv.Atoi(ps.ByName("id"))
+
+	modifiedEntry.ModEntry = html.EscapeString(strings.TrimSpace(modifiedEntry.ModEntry))
+	if modifiedEntry.ModEntry == "" {
+		return
+	}
+
+	if err := h.repo.EditEntry(modifiedEntry, int64(id)); err != nil {
+		httperror.WriteJSONError(w, "Ошибка при обновления записи в БД", err, http.StatusInternalServerError)
+		h.logger.Errorf("Ошибка при обновления записи в БД: %s", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

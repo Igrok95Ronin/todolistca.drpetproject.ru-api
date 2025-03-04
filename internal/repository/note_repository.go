@@ -2,7 +2,6 @@ package repository
 
 import (
 	"github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/models"
-	"github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/pkg/logging"
 	"gorm.io/gorm"
 )
 
@@ -10,32 +9,32 @@ import (
 type NoteRepository interface {
 	GetAllNotes() ([]models.AllNotes, error)
 	CreateNote(note *models.AllNotes) error
+	EditEntry(updatedEntry *models.ModifiedEntry, id int64) error
 }
 
 type noteRepository struct {
-	db     *gorm.DB
-	logger *logging.Logger
+	db *gorm.DB
 }
 
-func NewNoteRepository(db *gorm.DB, logger *logging.Logger) NoteRepository {
+func NewNoteRepository(db *gorm.DB) NoteRepository {
 	return &noteRepository{
-		db:     db,
-		logger: logger,
+		db: db,
 	}
 }
 
 // GetAllNotes Получить все посты
 func (r *noteRepository) GetAllNotes() ([]models.AllNotes, error) {
-	var note []models.AllNotes
-	if err := r.db.Find(&note).Error; err != nil {
-		r.logger.Error(err)
-		return nil, err
-	}
-
-	return note, nil
+	var notes []models.AllNotes
+	err := r.db.Find(&notes).Error
+	return notes, err
 }
 
 // CreateNote сохраняет новую заметку в БД
 func (r *noteRepository) CreateNote(note *models.AllNotes) error {
 	return r.db.Create(&note).Error
+}
+
+// EditEntry обновить заметку в БД
+func (r *noteRepository) EditEntry(updatedEntry *models.ModifiedEntry, id int64) error {
+	return r.db.Model(&models.AllNotes{}).Where("id = ?", id).Update("note", updatedEntry.ModEntry).Error
 }
