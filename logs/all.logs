@@ -19,3 +19,6 @@
 [36mINFO[0m[2025-03-04T21:23:30+03:00]main.go:49 main.start() Сервер запущен на :8080                      
 [31mERRO[0m[2025-03-04T21:24:35+03:00]note_handler.go:100 github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/handlers.(*NoteHandler).EditEntry() Ошибка при обновления записи в БД: failed to encode args[0]: unable to encode &models.ModifiedEntry{ModEntry:"Update note !!!"} into text format for text (OID 25): cannot find encode plan 
 [31mERRO[0m[2025-03-04T21:24:53+03:00]note_handler.go:100 github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/handlers.(*NoteHandler).EditEntry() Ошибка при обновления записи в БД: failed to encode args[0]: unable to encode &models.ModifiedEntry{ModEntry:"Update note"} into text format for text (OID 25): cannot find encode plan 
+[36mINFO[0m[2025-03-04T21:25:29+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-05T21:03:28+03:00]main.go:49 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-05T21:15:52+03:00]main.go:49 main.start() Сервер запущен на :8080                      

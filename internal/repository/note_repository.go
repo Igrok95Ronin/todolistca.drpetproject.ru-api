@@ -10,6 +10,7 @@ type NoteRepository interface {
 	GetAllNotes() ([]models.AllNotes, error)
 	CreateNote(note *models.AllNotes) error
 	EditEntry(updatedEntry *models.ModifiedEntry, id int64) error
+	DeleteEntry(id int64) error
 }
 
 type noteRepository struct {
@@ -37,4 +38,9 @@ func (r *noteRepository) CreateNote(note *models.AllNotes) error {
 // EditEntry обновить заметку в БД
 func (r *noteRepository) EditEntry(updatedEntry *models.ModifiedEntry, id int64) error {
 	return r.db.Model(&models.AllNotes{}).Where("id = ?", id).Update("note", updatedEntry.ModEntry).Error
+}
+
+// DeleteEntry Удалить запись из БД
+func (r *noteRepository) DeleteEntry(id int64) error {
+	return r.db.Where("id = ?", id).Unscoped().Delete(&models.AllNotes{}).Error
 }

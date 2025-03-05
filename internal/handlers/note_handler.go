@@ -103,3 +103,26 @@ func (h *NoteHandler) EditEntry(w http.ResponseWriter, r *http.Request, ps httpr
 
 	w.WriteHeader(http.StatusOK)
 }
+
+// DeleteEntry // Удалить запись
+func (h *NoteHandler) DeleteEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ID := ps.ByName("id")
+
+	id, err := strconv.Atoi(ID)
+	if err != nil {
+		h.logger.Errorf("Некорректный ID: %s", err)
+		return
+	}
+	if id <= 0 {
+		h.logger.Errorf("ID должен быть больше 0: %d", id)
+		return
+	}
+
+	if err = h.repo.DeleteEntry(int64(id)); err != nil {
+		h.logger.Errorf("Ошибка удаления записи с ID %d: %s", id, err)
+		httperror.WriteJSONError(w, "Ошибка удаления записи", err, http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
