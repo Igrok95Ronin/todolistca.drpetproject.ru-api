@@ -170,3 +170,14 @@ func (h *NoteHandler) DeleteAllEntries(w http.ResponseWriter, _ *http.Request, _
 
 	w.WriteHeader(http.StatusOK)
 }
+
+// DeleteAllMarkedEntries Удалить все отмеченные записи
+func (h *NoteHandler) DeleteAllMarkedEntries(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
+	if err := h.repo.DeleteAllMarkedEntries(); err != nil {
+		h.logger.Errorf("Ошибка при удалении всех отмеченных записей: %s", err)
+		httperror.WriteJSONError(w, "Ошибка при удалении всех отмеченных записей", err, http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
