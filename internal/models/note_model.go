@@ -19,3 +19,7 @@ func (AllNotes) TableName() string {
 type ModifiedEntry struct {
 	ModEntry string `json:"modEntry"`
 }
+
+type Check struct {
+	Check bool `json:"check"`
+}

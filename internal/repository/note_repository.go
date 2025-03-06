@@ -11,6 +11,7 @@ type NoteRepository interface {
 	CreateNote(note *models.AllNotes) error
 	EditEntry(updatedEntry *models.ModifiedEntry, id int64) error
 	DeleteEntry(id int64) error
+	MarkCompleteEntry(check models.Check, id int64) error
 }
 
 type noteRepository struct {
@@ -43,4 +44,9 @@ func (r *noteRepository) EditEntry(updatedEntry *models.ModifiedEntry, id int64)
 // DeleteEntry Удалить запись из БД
 func (r *noteRepository) DeleteEntry(id int64) error {
 	return r.db.Where("id = ?", id).Unscoped().Delete(&models.AllNotes{}).Error
+}
+
+// MarkCompleteEntry Отметить выполненную запись в БД
+func (r *noteRepository) MarkCompleteEntry(check models.Check, id int64) error {
+	return r.db.Model(&models.AllNotes{}).Where("id = ?", id).Update("completed", check.Check).Error
 }

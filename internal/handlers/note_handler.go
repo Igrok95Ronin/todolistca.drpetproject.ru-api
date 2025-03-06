@@ -126,3 +126,36 @@ func (h *NoteHandler) DeleteEntry(w http.ResponseWriter, r *http.Request, ps htt
 
 	w.WriteHeader(http.StatusOK)
 }
+
+// MarkCompleteEntry Отметить выполненную запись
+func (h *NoteHandler) MarkCompleteEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ID := ps.ByName("id")
+
+	var check models.Check
+
+	if err := json.NewDecoder(r.Body).Decode(&check); err != nil {
+		// Если произошла ошибка декодирования, возвращаем клиенту ошибку с кодом 400
+		httperror.WriteJSONError(w, "Ошибка декодирования в JSON", err, http.StatusBadRequest)
+		// Логируем ошибку
+		h.logger.Errorf("Ошибка декодирования в JSON: %s", err)
+		return
+	}
+
+	id, err := strconv.Atoi(ID)
+	if err != nil {
+		h.logger.Errorf("Некорректный ID: %s", err)
+		return
+	}
+	if id <= 0 {
+		h.logger.Errorf("ID должен быть больше 0: %d", id)
+		return
+	}
+
+	if err = h.repo.MarkCompleteEntry(check, int64(id)); err != nil {
+		h.logger.Errorf("Ошибка обновления записи с ID %d: %s", id, err)
+		httperror.WriteJSONError(w, "Ошибка обновления записи", err, http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
