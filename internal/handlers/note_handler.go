@@ -159,3 +159,14 @@ func (h *NoteHandler) MarkCompleteEntry(w http.ResponseWriter, r *http.Request, 
 
 	w.WriteHeader(http.StatusOK)
 }
+
+// DeleteAllEntries Удалить все записи
+func (h *NoteHandler) DeleteAllEntries(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
+	if err := h.repo.DeleteAllEntries(); err != nil {
+		h.logger.Errorf("Ошибка при удалении всех записей: %s", err)
+		httperror.WriteJSONError(w, "Ошибка при удалении всех записей", err, http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

@@ -33,4 +33,5 @@ func (h *Handler) RegisterRoutes(router *httprouter.Router) {
 	router.PUT("/editentry/:id", noteHandler.EditEntry)                  // Редактировать запись
 	router.DELETE("/deleteentry/:id", noteHandler.DeleteEntry)           // Удалить запись
 	router.PUT("/markcompletedentry/:id", noteHandler.MarkCompleteEntry) // Отметить выполненную запись
+	router.DELETE("/deleteallentries", noteHandler.DeleteAllEntries)     // Удалить все записи
 }

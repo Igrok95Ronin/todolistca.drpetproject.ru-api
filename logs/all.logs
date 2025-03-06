@@ -26,3 +26,4 @@
 [36mINFO[0m[2025-03-06T21:10:48+03:00]main.go:49 main.start() Сервер запущен на :8080                      
 [31mERRO[0m[2025-03-06T21:13:08+03:00]note_handler.go:155 github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/handlers.(*NoteHandler).MarkCompleteEntry() Ошибка обновления записи с ID 12: ERROR: column "complete" of relation "all_notes" does not exist (SQLSTATE 42703) 
 [31mERRO[0m[2025-03-06T21:13:15+03:00]note_handler.go:155 github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/handlers.(*NoteHandler).MarkCompleteEntry() Ошибка обновления записи с ID 10: ERROR: column "complete" of relation "all_notes" does not exist (SQLSTATE 42703) 
+[36mINFO[0m[2025-03-06T21:14:09+03:00]main.go:49 main.start() Сервер запущен на :8080                      
