@@ -32,8 +32,8 @@ func main() {
 	handler := handlers.NewHandler(cfg, logger, db)
 	handler.RegisterRoutes(router)
 
-	// Обработка cors
-	corsHandler := middleware.CorsSettings().Handler(router)
+	// Обработка cors, Context
+	corsHandler := middleware.CorsSettings().Handler(middleware.RequestContext(router))
 
 	// Запускаем сервер
 	start(corsHandler, cfg, logger)

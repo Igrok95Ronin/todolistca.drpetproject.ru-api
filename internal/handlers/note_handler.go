@@ -29,7 +29,9 @@ func NewNoteHandler(repo repository.NoteRepository, logger *logging.Logger) *Not
 
 // GetAllNotes Получить все посты
 func (h *NoteHandler) GetAllNotes(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	notes, err := h.repo.GetAllNotes()
+	ctx := r.Context()
+
+	notes, err := h.repo.GetAllNotes(ctx)
 	if err != nil {
 		h.logger.Error(err)
 		httperror.WriteJSONError(w, "Ошибка получения заметок", err, http.StatusInternalServerError)
@@ -47,6 +49,7 @@ func (h *NoteHandler) GetAllNotes(w http.ResponseWriter, r *http.Request, _ http
 
 // AddPost добавляет новую заметку
 func (h *NoteHandler) AddPost(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	ctx := r.Context()
 	var note models.AllNotes
 
 	if err := json.NewDecoder(r.Body).Decode(&note); err != nil {
@@ -67,7 +70,7 @@ func (h *NoteHandler) AddPost(w http.ResponseWriter, r *http.Request, _ httprout
 		Note: note.Note,
 	}
 
-	if err := h.repo.CreateNote(&allNotes); err != nil {
+	if err := h.repo.CreateNote(ctx, &allNotes); err != nil {
 		h.logger.Errorf("Ошибка при добавления записи в БД: %s", err)
 		httperror.WriteJSONError(w, "Ошибка при добавления записи в БД", err, http.StatusInternalServerError)
 		return
@@ -78,6 +81,7 @@ func (h *NoteHandler) AddPost(w http.ResponseWriter, r *http.Request, _ httprout
 
 // EditEntry обновить заметку
 func (h *NoteHandler) EditEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx := r.Context()
 	var modifiedEntry *models.ModifiedEntry
 
 	if err := json.NewDecoder(r.Body).Decode(&modifiedEntry); err != nil {
@@ -95,7 +99,7 @@ func (h *NoteHandler) EditEntry(w http.ResponseWriter, r *http.Request, ps httpr
 		return
 	}
 
-	if err := h.repo.EditEntry(modifiedEntry, int64(id)); err != nil {
+	if err := h.repo.EditEntry(ctx, modifiedEntry, int64(id)); err != nil {
 		httperror.WriteJSONError(w, "Ошибка при обновления записи в БД", err, http.StatusInternalServerError)
 		h.logger.Errorf("Ошибка при обновления записи в БД: %s", err)
 		return
@@ -106,6 +110,7 @@ func (h *NoteHandler) EditEntry(w http.ResponseWriter, r *http.Request, ps httpr
 
 // DeleteEntry // Удалить запись
 func (h *NoteHandler) DeleteEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx := r.Context()
 	ID := ps.ByName("id")
 
 	id, err := strconv.Atoi(ID)
@@ -118,7 +123,7 @@ func (h *NoteHandler) DeleteEntry(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	if err = h.repo.DeleteEntry(int64(id)); err != nil {
+	if err = h.repo.DeleteEntry(ctx, int64(id)); err != nil {
 		h.logger.Errorf("Ошибка удаления записи с ID %d: %s", id, err)
 		httperror.WriteJSONError(w, "Ошибка удаления записи", err, http.StatusInternalServerError)
 		return
@@ -129,6 +134,7 @@ func (h *NoteHandler) DeleteEntry(w http.ResponseWriter, r *http.Request, ps htt
 
 // MarkCompleteEntry Отметить выполненную запись
 func (h *NoteHandler) MarkCompleteEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx := r.Context()
 	ID := ps.ByName("id")
 
 	var check models.Check
@@ -151,7 +157,7 @@ func (h *NoteHandler) MarkCompleteEntry(w http.ResponseWriter, r *http.Request, 
 		return
 	}
 
-	if err = h.repo.MarkCompleteEntry(check, int64(id)); err != nil {
+	if err = h.repo.MarkCompleteEntry(ctx, check, int64(id)); err != nil {
 		h.logger.Errorf("Ошибка обновления записи с ID %d: %s", id, err)
 		httperror.WriteJSONError(w, "Ошибка обновления записи", err, http.StatusBadRequest)
 		return
@@ -161,8 +167,9 @@ func (h *NoteHandler) MarkCompleteEntry(w http.ResponseWriter, r *http.Request, 
 }
 
 // DeleteAllEntries Удалить все записи
-func (h *NoteHandler) DeleteAllEntries(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
-	if err := h.repo.DeleteAllEntries(); err != nil {
+func (h *NoteHandler) DeleteAllEntries(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	ctx := r.Context()
+	if err := h.repo.DeleteAllEntries(ctx); err != nil {
 		h.logger.Errorf("Ошибка при удалении всех записей: %s", err)
 		httperror.WriteJSONError(w, "Ошибка при удалении всех записей", err, http.StatusBadRequest)
 		return
@@ -172,8 +179,9 @@ func (h *NoteHandler) DeleteAllEntries(w http.ResponseWriter, _ *http.Request, _
 }
 
 // DeleteAllMarkedEntries Удалить все отмеченные записи
-func (h *NoteHandler) DeleteAllMarkedEntries(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
-	if err := h.repo.DeleteAllMarkedEntries(); err != nil {
+func (h *NoteHandler) DeleteAllMarkedEntries(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	ctx := r.Context()
+	if err := h.repo.DeleteAllMarkedEntries(ctx); err != nil {
 		h.logger.Errorf("Ошибка при удалении всех отмеченных записей: %s", err)
 		httperror.WriteJSONError(w, "Ошибка при удалении всех отмеченных записей", err, http.StatusBadRequest)
 		return
