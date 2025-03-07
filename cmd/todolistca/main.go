@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/config"
 	"github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/handlers"
+	"github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/middleware"
 	"github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/repository"
 	"github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/pkg/logging"
 	"github.com/julienschmidt/httprouter"
@@ -31,8 +32,11 @@ func main() {
 	handler := handlers.NewHandler(cfg, logger, db)
 	handler.RegisterRoutes(router)
 
+	// Обработка cors
+	corsHandler := middleware.CorsSettings().Handler(router)
+
 	// Запускаем сервер
-	start(router, cfg, logger)
+	start(corsHandler, cfg, logger)
 }
 
 func start(router http.Handler, cfg *config.Config, logger *logging.Logger) {
