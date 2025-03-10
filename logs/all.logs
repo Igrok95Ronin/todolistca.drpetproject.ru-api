@@ -35,3 +35,9 @@
 [36mINFO[0m[2025-03-07T21:45:42+03:00]main.go:53 main.start() Сервер запущен на :8080                      
 [31mERRO[0m[2025-03-07T21:48:23+03:00]note_handler.go:36 github.com/Igrok95Ronin/todolistca.drpetproject.ru-api.git/internal/handlers.(*NoteHandler).GetAllNotes() failed to connect to `user=todolistcaSuperUser database=todolistcaDB`: 127.0.0.1:5433 (localhost): failed SASL auth: FATAL: password authentication failed for user "todolistcaSuperUser" (SQLSTATE 28P01) 
 [31mFATA[0m[2025-03-07T21:50:03+03:00]main.go:24 main.main() Ошибка при подключении к базе данных: ошибка подключения к БД: failed to connect to `user=todolistcaSuperUser database=todolistcaDB`: 127.0.0.1:5433 (localhost): failed SASL auth: FATAL: password authentication failed for user "todolistcaSuperUser" (SQLSTATE 28P01) 
+[36mINFO[0m[2025-03-07T21:53:03+03:00]main.go:53 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-08T22:15:42+03:00]main.go:53 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-09T21:28:57+03:00]main.go:53 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-09T21:56:52+03:00]main.go:53 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-09T22:12:02+03:00]main.go:53 main.start() Сервер запущен на :8080                      
+[36mINFO[0m[2025-03-09T22:12:56+03:00]main.go:53 main.start() Сервер запущен на :8080                      
