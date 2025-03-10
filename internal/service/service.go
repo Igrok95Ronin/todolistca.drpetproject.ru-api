@@ -14,6 +14,10 @@ type NoteService interface {
 	GetAllNotes(ctx context.Context) ([]models.AllNotes, error)
 	CreateNote(ctx context.Context, note *models.AllNotes) error
 	EditEntry(ctx context.Context, updatedEntry *models.ModifiedEntry, id int64) error
+	DeleteEntry(ctx context.Context, id int64) error
+	MarkCompleteEntry(ctx context.Context, check models.Check, id int64) error
+	DeleteAllEntries(ctx context.Context) error
+	DeleteAllMarkedEntries(ctx context.Context) error
 }
 
 type noteService struct {
@@ -50,4 +54,34 @@ func (s *noteService) EditEntry(ctx context.Context, updatedEntry *models.Modifi
 	}
 
 	return s.repo.EditEntry(ctx, updatedEntry, id)
+}
+
+// DeleteEntry Удалить запись
+func (s *noteService) DeleteEntry(ctx context.Context, id int64) error {
+
+	if id <= 0 {
+		return errors.New("ID должен быть больше 0")
+	}
+
+	return s.repo.DeleteEntry(ctx, id)
+}
+
+// MarkCompleteEntry Отметить выполненную запись
+func (s *noteService) MarkCompleteEntry(ctx context.Context, check models.Check, id int64) error {
+
+	if id <= 0 {
+		return errors.New("ID должен быть больше 0")
+	}
+
+	return s.repo.MarkCompleteEntry(ctx, check, id)
+}
+
+// DeleteAllEntries Удалить все записи
+func (s *noteService) DeleteAllEntries(ctx context.Context) error {
+	return s.repo.DeleteAllEntries(ctx)
+}
+
+// DeleteAllMarkedEntries Удалить все отмеченные записи
+func (s *noteService) DeleteAllMarkedEntries(ctx context.Context) error {
+	return s.repo.DeleteAllMarkedEntries(ctx)
 }

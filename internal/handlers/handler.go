@@ -91,84 +91,76 @@ func (h *NoteHandler) EditEntry(w http.ResponseWriter, r *http.Request, ps httpr
 	w.WriteHeader(http.StatusOK)
 }
 
-//// DeleteEntry // Удалить запись
-//func (h *NoteHandler) DeleteEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-//	ctx := r.Context()
-//	ID := ps.ByName("id")
-//
-//	id, err := strconv.Atoi(ID)
-//	if err != nil {
-//		h.logger.Errorf("Некорректный ID: %s", err)
-//		return
-//	}
-//	if id <= 0 {
-//		h.logger.Errorf("ID должен быть больше 0: %d", id)
-//		return
-//	}
-//
-//	if err = h.repo.DeleteEntry(ctx, int64(id)); err != nil {
-//		h.logger.Errorf("Ошибка удаления записи с ID %d: %s", id, err)
-//		httperror.WriteJSONError(w, "Ошибка удаления записи", err, http.StatusInternalServerError)
-//		return
-//	}
-//
-//	w.WriteHeader(http.StatusOK)
-//}
-//
-//// MarkCompleteEntry Отметить выполненную запись
-//func (h *NoteHandler) MarkCompleteEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
-//	ctx := r.Context()
-//	ID := ps.ByName("id")
-//
-//	var check models.Check
-//
-//	if err := json.NewDecoder(r.Body).Decode(&check); err != nil {
-//		// Если произошла ошибка декодирования, возвращаем клиенту ошибку с кодом 400
-//		httperror.WriteJSONError(w, "Ошибка декодирования в JSON", err, http.StatusBadRequest)
-//		// Логируем ошибку
-//		h.logger.Errorf("Ошибка декодирования в JSON: %s", err)
-//		return
-//	}
-//
-//	id, err := strconv.Atoi(ID)
-//	if err != nil {
-//		h.logger.Errorf("Некорректный ID: %s", err)
-//		return
-//	}
-//	if id <= 0 {
-//		h.logger.Errorf("ID должен быть больше 0: %d", id)
-//		return
-//	}
-//
-//	if err = h.repo.MarkCompleteEntry(ctx, check, int64(id)); err != nil {
-//		h.logger.Errorf("Ошибка обновления записи с ID %d: %s", id, err)
-//		httperror.WriteJSONError(w, "Ошибка обновления записи", err, http.StatusBadRequest)
-//		return
-//	}
-//
-//	w.WriteHeader(http.StatusOK)
-//}
-//
-//// DeleteAllEntries Удалить все записи
-//func (h *NoteHandler) DeleteAllEntries(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-//	ctx := r.Context()
-//	if err := h.repo.DeleteAllEntries(ctx); err != nil {
-//		h.logger.Errorf("Ошибка при удалении всех записей: %s", err)
-//		httperror.WriteJSONError(w, "Ошибка при удалении всех записей", err, http.StatusBadRequest)
-//		return
-//	}
-//
-//	w.WriteHeader(http.StatusOK)
-//}
-//
-//// DeleteAllMarkedEntries Удалить все отмеченные записи
-//func (h *NoteHandler) DeleteAllMarkedEntries(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-//	ctx := r.Context()
-//	if err := h.repo.DeleteAllMarkedEntries(ctx); err != nil {
-//		h.logger.Errorf("Ошибка при удалении всех отмеченных записей: %s", err)
-//		httperror.WriteJSONError(w, "Ошибка при удалении всех отмеченных записей", err, http.StatusBadRequest)
-//		return
-//	}
-//
-//	w.WriteHeader(http.StatusOK)
-//}
+// DeleteEntry // Удалить запись
+func (h *NoteHandler) DeleteEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx := r.Context()
+	ID := ps.ByName("id")
+
+	id, err := strconv.Atoi(ID)
+	if err != nil {
+		h.logger.Errorf("Некорректный ID: %s", err)
+		return
+	}
+
+	if err = h.service.DeleteEntry(ctx, int64(id)); err != nil {
+		h.logger.Errorf("Ошибка удаления записи с ID %d: %s", id, err)
+		httperror.WriteJSONError(w, "Ошибка удаления записи", err, http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// MarkCompleteEntry Отметить выполненную запись
+func (h *NoteHandler) MarkCompleteEntry(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	ctx := r.Context()
+	ID := ps.ByName("id")
+
+	var check models.Check
+
+	if err := json.NewDecoder(r.Body).Decode(&check); err != nil {
+		// Если произошла ошибка декодирования, возвращаем клиенту ошибку с кодом 400
+		httperror.WriteJSONError(w, "Ошибка декодирования в JSON", err, http.StatusBadRequest)
+		// Логируем ошибку
+		h.logger.Errorf("Ошибка декодирования в JSON: %s", err)
+		return
+	}
+
+	id, err := strconv.Atoi(ID)
+	if err != nil {
+		h.logger.Errorf("Некорректный ID: %s", err)
+		return
+	}
+
+	if err = h.service.MarkCompleteEntry(ctx, check, int64(id)); err != nil {
+		h.logger.Errorf("Ошибка обновления записи с ID %d: %s", id, err)
+		httperror.WriteJSONError(w, "Ошибка обновления записи", err, http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// DeleteAllEntries Удалить все записи
+func (h *NoteHandler) DeleteAllEntries(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	ctx := r.Context()
+	if err := h.service.DeleteAllEntries(ctx); err != nil {
+		h.logger.Errorf("Ошибка при удалении всех записей: %s", err)
+		httperror.WriteJSONError(w, "Ошибка при удалении всех записей", err, http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
+// DeleteAllMarkedEntries Удалить все отмеченные записи
+func (h *NoteHandler) DeleteAllMarkedEntries(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	ctx := r.Context()
+	if err := h.service.DeleteAllMarkedEntries(ctx); err != nil {
+		h.logger.Errorf("Ошибка при удалении всех отмеченных записей: %s", err)
+		httperror.WriteJSONError(w, "Ошибка при удалении всех отмеченных записей", err, http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}

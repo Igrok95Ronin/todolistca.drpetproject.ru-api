@@ -34,11 +34,11 @@ func NewHandler(cfg *config.Config, logger *logging.Logger, db *gorm.DB) *Handle
 func (h *Handler) RegisterRoutes(router *httprouter.Router) {
 	noteHandler := NewNoteHandler(h.noteSvc, h.logger)
 
-	router.GET("/", noteHandler.GetAllNotes)       // Получения всех записей
-	router.POST("/note", noteHandler.AddPost)      // Добавить пост
-	router.PUT("/note/:id", noteHandler.EditEntry) // Редактировать запись
-	//router.DELETE("/deleteentry/:id", noteHandler.DeleteEntry)                   // Удалить запись
-	//router.PUT("/markcompletedentry/:id", noteHandler.MarkCompleteEntry)         // Отметить выполненную запись
-	//router.DELETE("/deleteallentries", noteHandler.DeleteAllEntries)             // Удалить все записи
-	//router.DELETE("/deleteallmarkedentries", noteHandler.DeleteAllMarkedEntries) // Удалить все отмеченные записи
+	router.GET("/", noteHandler.GetAllNotes)                              // Получения всех записей
+	router.POST("/notes", noteHandler.AddPost)                            // Добавить пост
+	router.PUT("/notes/:id", noteHandler.EditEntry)                       // Редактировать запись
+	router.DELETE("/note/:id", noteHandler.DeleteEntry)                   // Удалить запись
+	router.PUT("/notes/:id/complete", noteHandler.MarkCompleteEntry)      // Отметить выполненную запись
+	router.DELETE("/notes", noteHandler.DeleteAllEntries)                 // Удалить все записи
+	router.DELETE("/notes/completed", noteHandler.DeleteAllMarkedEntries) // Удалить все отмеченные записи
 }
